@@ -2,6 +2,7 @@ import Header from '@/app/components/Header';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import Image from 'next/image';
+import Link from 'next/link';
 import { getPostData, uploadPhoto } from './actions';
 
 export default async function Home() {
@@ -24,7 +25,8 @@ export default async function Home() {
       <div className='container mx-auto px-4'>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'>
           {rows.map((image) => (
-            <div
+            <Link
+              href={`/p/${image.id}`}
               key={image.id}
               className='bg-gray-800 rounded-xs shadow-lg overflow-hidden relative group'
             >
@@ -40,7 +42,7 @@ export default async function Home() {
                   {image.caption}
                 </p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
