@@ -1,14 +1,16 @@
-import { getPostLink } from '@/utils/getPostLink';
+import { getPhotoUrl, uploadPhoto } from '@/app/actions';
 
 export default function Header() {
   const handleSubmit = async (formData: FormData) => {
     'use server';
+    const postLink = formData.get('instagramLink');
+    if (!postLink) return;
 
-    const link = formData.get('instagramLink');
-    if (!link) return;
-    const postLink = await getPostLink(link.toString());
+    const photoUrl = await getPhotoUrl(postLink.toString());
 
-    console.log(postLink);
+    if (!photoUrl) return;
+
+    await uploadPhoto(photoUrl);
   };
 
   return (
