@@ -20,29 +20,33 @@ export default async function Home() {
   };
 
   return (
-    <main className='min-h-screen bg-gray-900 pt-20'>
+    <main className='min-h-screen bg-black pt-20'>
       <Header handleOnLinkSubmit={handleOnLinkSubmit} />
       <div className='container mx-auto px-4 py-8'>
         <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'>
           {rows.map((image) => (
-            <Link
-              href={`/p/${image.id}`}
+            <div
               key={image.id}
-              className='bg-gray-800 rounded-xs overflow-hidden relative group'
+              className='item bg-gray-900 rounded-xs overflow-hidden'
             >
-              <Image
-                src={image.file_url}
-                alt={image.caption}
-                width={300}
-                height={300}
-                className='w-full h-full object-cover'
-              />
-              <div className='absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-                <p className='text-gray-200 text-sm p-4 text-center'>
-                  {image.caption}
-                </p>
-              </div>
-            </Link>
+              <Link
+                href={`/p/${image.id}`}
+                className='overflow-hidden relative group'
+              >
+                <Image
+                  src={image.file_url}
+                  alt={image.caption}
+                  width={300}
+                  height={300}
+                  className='w-full h-full object-cover'
+                />
+                <div className='absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+                  <p className='text-gray-300 text-sm p-4 text-center'>
+                    {image.caption}
+                  </p>
+                </div>
+              </Link>
+            </div>
           ))}
         </div>
       </div>
