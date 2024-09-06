@@ -1,4 +1,5 @@
-import { getPhotoUrl, uploadPhoto } from '@/app/actions';
+import { getPostData, uploadPhoto } from '@/app/actions';
+import { sql } from '@vercel/postgres';
 
 export default function Header() {
   const handleSubmit = async (formData: FormData) => {
@@ -6,11 +7,9 @@ export default function Header() {
     const postLink = formData.get('instagramLink');
     if (!postLink) return;
 
-    const photoUrl = await getPhotoUrl(postLink.toString());
-
-    if (!photoUrl) return;
-
-    await uploadPhoto(photoUrl);
+    const { photoUrl, caption } = await getPostData(postLink.toString());
+    const blobUrl = await uploadPhoto(photoUrl);
+    await sql`INSERT INTO images (file_url, caption) VALUES (${blobUrl}, ${caption})`;
   };
 
   return (
