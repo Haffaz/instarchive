@@ -1,40 +1,96 @@
-import { getPostData, uploadPhoto } from '@/app/actions';
-import { sql } from '@vercel/postgres';
-import { revalidatePath } from 'next/cache';
+'use client';
+import { useState } from 'react';
 
-export default function Header() {
-  const handleSubmit = async (formData: FormData) => {
-    'use server';
-    const postLink = formData.get('instagramLink');
-    if (!postLink) return;
+type Props = {
+  handleOnLinkSubmit: (formData: FormData) => void;
+};
 
-    const { photoUrl, caption } = await getPostData(postLink.toString());
-    const blobUrl = await uploadPhoto(photoUrl);
-    await sql`INSERT INTO images (file_url, caption) VALUES (${blobUrl}, ${caption})`;
-    revalidatePath('/');
+const Header = ({ handleOnLinkSubmit }: Props) => {
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+
+  const toggleOverlay = () => {
+    setIsOverlayOpen(!isOverlayOpen);
   };
 
   return (
-    <nav className='fixed top-0 left-0 right-0 bg-white shadow-md z-10'>
-      <div className='container mx-auto px-4 py-3 flex items-center justify-between'>
-        <h1 className='text-2xl font-bold text-blue-500'>Instakive</h1>
-        <form action={handleSubmit} className='flex-grow max-w-2xl ml-8'>
-          <div className='flex items-center'>
-            <input
-              type='text'
-              name='instagramLink'
-              placeholder='Enter Instagram image link'
-              className='flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-black'
-            />
-            <button
-              type='submit'
-              className='bg-blue-500 text-white py-2 px-6 rounded-r-md hover:bg-blue-600 transition duration-300'
+    <>
+      <nav className='fixed top-0 left-0 right-0 bg-gradient-to-r from-gray-900 to-gray-800 shadow-lg z-10'>
+        <div className='container mx-auto px-6 py-4 flex items-center justify-between'>
+          <h1 className='text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600'>
+            Instakive
+          </h1>
+          <button
+            onClick={toggleOverlay}
+            className='md:hidden bg-gray-700 text-gray-200 p-2 rounded-full hover:bg-gray-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-400'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              className='h-6 w-6'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
             >
-              Add
-            </button>
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M12 4v16m8-8H4'
+              />
+            </svg>
+          </button>
+          <form
+            action={handleOnLinkSubmit}
+            className='hidden md:flex md:flex-grow md:max-w-2xl md:ml-8'
+          >
+            <div className='flex items-center w-full'>
+              <input
+                type='text'
+                name='instagramLink'
+                placeholder='Enter Instagram image link'
+                className='flex-grow px-4 py-2 bg-gray-800 border border-gray-700 rounded-l-full focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-200'
+              />
+              <button
+                type='submit'
+                className='bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-6 rounded-r-full hover:from-purple-600 hover:to-pink-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-400'
+              >
+                Add
+              </button>
+            </div>
+          </form>
+        </div>
+      </nav>
+
+      {isOverlayOpen && (
+        <div className='fixed inset-0 bg-black bg-opacity-70 z-20 flex items-center justify-center md:hidden'>
+          <div className='bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-lg w-11/12 max-w-md shadow-xl'>
+            <form action={handleOnLinkSubmit}>
+              <input
+                type='text'
+                name='instagramLink'
+                placeholder='Enter Instagram image link'
+                className='w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-200 mb-4'
+              />
+              <div className='flex justify-end space-x-3'>
+                <button
+                  type='button'
+                  onClick={toggleOverlay}
+                  className='px-5 py-2 border border-gray-600 rounded-full hover:bg-gray-700 transition duration-300 text-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500'
+                >
+                  Cancel
+                </button>
+                <button
+                  type='submit'
+                  className='bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-6 rounded-full hover:from-purple-600 hover:to-pink-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-400'
+                >
+                  Add
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
-    </nav>
+        </div>
+      )}
+    </>
   );
-}
+};
+
+export default Header;
