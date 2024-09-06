@@ -1,5 +1,6 @@
 import { getPostData, uploadPhoto } from '@/app/actions';
 import { sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
 
 export default function Header() {
   const handleSubmit = async (formData: FormData) => {
@@ -10,6 +11,7 @@ export default function Header() {
     const { photoUrl, caption } = await getPostData(postLink.toString());
     const blobUrl = await uploadPhoto(photoUrl);
     await sql`INSERT INTO images (file_url, caption) VALUES (${blobUrl}, ${caption})`;
+    revalidatePath('/');
   };
 
   return (
