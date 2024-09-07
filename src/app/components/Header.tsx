@@ -3,12 +3,39 @@ import { handleAddPhotoAction } from '@/app/actions';
 import { XMarkIcon } from '@heroicons/react/24/solid';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
 
-const initialState = { message: '' };
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <motion.button
+      whileHover={{ scale: pending ? 1 : 1.05 }}
+      whileTap={{ scale: pending ? 1 : 0.95 }}
+      type='submit'
+      disabled={pending}
+      className={`bg-zinc-700 bg-opacity-70 text-zinc-100 py-2 px-4 text-sm rounded-r-lg transition duration-300 focus:outline-none focus:ring-2 focus:ring-zinc-500 shadow-md ${
+        pending ? 'opacity-50 cursor-not-allowed' : 'hover:bg-zinc-600'
+      }`}
+    >
+      {pending ? (
+        <motion.div
+          className='inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]'
+          initial={{ rotate: 0 }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        />
+      ) : (
+        'Add'
+      )}
+    </motion.button>
+  );
+}
 
 const Header = () => {
-  const [state, formAction] = useFormState(handleAddPhotoAction, initialState);
+  const [state, formAction] = useFormState(handleAddPhotoAction, {
+    message: '',
+  });
+
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
@@ -52,14 +79,7 @@ const Header = () => {
                     placeholder='ex: https://www.instagram.com/p/aBcd123xLSl'
                     className='w-full px-4 py-2 bg-transparent focus:outline-none text-zinc-200 placeholder-zinc-400 text-sm'
                   />
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    type='submit'
-                    className='bg-zinc-700 bg-opacity-70 text-zinc-100 py-2 px-4 text-sm rounded-r-lg hover:bg-zinc-600 transition duration-300 focus:outline-none focus:ring-2 focus:ring-zinc-500 shadow-md'
-                  >
-                    Add
-                  </motion.button>
+                  <SubmitButton />
                 </div>
               </motion.form>
             </div>
