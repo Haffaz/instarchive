@@ -5,12 +5,14 @@ import {
   TrashIcon,
   XMarkIcon,
 } from '@heroicons/react/24/solid';
+import { del } from '@vercel/blob';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { QueryResult } from 'pg';
+import { generateImage } from './actions';
 
 type Props = {
   params: {
@@ -44,8 +46,18 @@ export default async function PhotoPage({ params }: Props) {
   const handleDelete = async () => {
     'use server';
     await sql`DELETE FROM images WHERE id = ${params.photoId}`;
+    await del(photo.file_url);
+
     revalidatePath('/');
     redirect('/');
+  };
+
+  const handleImageGeneration = async () => {
+    'use server';
+    await generateImage(
+      photo.file_url,
+      'Change the image texture to look like anime',
+    );
   };
 
   return (
@@ -69,6 +81,15 @@ export default async function PhotoPage({ params }: Props) {
           >
             <TrashIcon className='h-5 w-5 mr-2' />
             Delete Photo
+          </button>
+        </form>
+        <form action={handleImageGeneration}>
+          <button
+            type='submit'
+            className='bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center'
+          >
+            <TrashIcon className='h-5 w-5 mr-2' />
+            Generate
           </button>
         </form>
       </div>
