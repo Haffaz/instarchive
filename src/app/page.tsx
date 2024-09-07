@@ -1,9 +1,8 @@
 import Header from '@/app/components/Header';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
-import Image from 'next/image';
-import Link from 'next/link';
 import { getPostData, uploadPhoto } from './actions';
+import PhotoGrid, { Photo } from './components/PhotoGrid';
 
 export default async function Home() {
   const { rows } = await sql`SELECT * FROM images ORDER BY created_at DESC`;
@@ -20,35 +19,10 @@ export default async function Home() {
   };
 
   return (
-    <main className='min-h-screen bg-black pt-20'>
+    <main className='min-h-screen bg-zinc-950 pt-20'>
       <Header handleOnLinkSubmit={handleOnLinkSubmit} />
-      <div className='container mx-auto px-4 py-8'>
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'>
-          {rows.map((image) => (
-            <div
-              key={image.id}
-              className='item bg-gray-900 rounded-xs overflow-hidden'
-            >
-              <Link
-                href={`/p/${image.id}`}
-                className='overflow-hidden relative group'
-              >
-                <Image
-                  src={image.file_url}
-                  alt={image.caption}
-                  width={300}
-                  height={300}
-                  className='w-full h-full object-cover'
-                />
-                <div className='absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-                  <p className='text-gray-300 text-sm p-4 text-center'>
-                    {image.caption}
-                  </p>
-                </div>
-              </Link>
-            </div>
-          ))}
-        </div>
+      <div className='container mx-auto px-4 py-4'>
+        <PhotoGrid images={rows as Photo[]} />
       </div>
     </main>
   );
