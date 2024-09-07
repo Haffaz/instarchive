@@ -42,7 +42,7 @@ export default async function PhotoPage({ params }: Props) {
           alt={photo.caption}
           width={800}
           height={800}
-          className='w-full h-auto object-contain mb-4'
+          className='w-full h-auto object-contain mb-4 rounded-lg'
         />
         <p className='text-gray-200 text-lg mb-4'>{photo.caption}</p>
       </div>
