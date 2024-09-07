@@ -1,14 +1,16 @@
+import { Photo } from '@/app/components/PhotoGrid';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  XMarkIcon,
   TrashIcon,
+  XMarkIcon,
 } from '@heroicons/react/24/solid';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { QueryResult } from 'pg';
 
 type Props = {
   params: {
@@ -17,7 +19,8 @@ type Props = {
 };
 
 export default async function PhotoPage({ params }: Props) {
-  const { rows } = await sql`SELECT * FROM images WHERE id = ${params.photoId}`;
+  const { rows } =
+    (await sql`SELECT * FROM images WHERE id = ${params.photoId}`) as QueryResult<Photo>;
 
   if (rows.length === 0) {
     return <div>Photo not found</div>;
@@ -37,8 +40,8 @@ export default async function PhotoPage({ params }: Props) {
   const handleDelete = async () => {
     'use server';
     await sql`DELETE FROM images WHERE id = ${params.photoId}`;
-    revalidatePath("/")
-    redirect("/");
+    revalidatePath('/');
+    redirect('/');
   };
 
   return (
