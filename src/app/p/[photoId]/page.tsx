@@ -61,54 +61,58 @@ export default async function PhotoPage({ params }: Props) {
   };
 
   return (
-    <div className='container mx-auto px-4 py-8 relative min-h-screen'>
+    <div className='container mx-auto px-4 py-8 relative max-h-screen flex flex-col items-center'>
       <Link href='/' className='absolute top-4 right-4 z-10'>
         <XMarkIcon className='h-8 w-8 text-white hover:text-gray-300 transition-colors' />
       </Link>
-      <div className='max-w-3xl mx-auto'>
-        <Image
-          src={photo.file_url}
-          alt={photo.caption}
-          width={800}
-          height={800}
-          className='w-full h-auto object-contain mb-4 rounded-lg'
-        />
-        <p className='text-gray-200 text-lg mb-4'>{photo.caption}</p>
-        <form action={handleDelete}>
-          <button
-            type='submit'
-            className='bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center'
-          >
-            <TrashIcon className='h-5 w-5 mr-2' />
-            Delete Photo
-          </button>
-        </form>
-        <form action={handleImageGeneration}>
-          <button
-            type='submit'
-            className='bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center'
-          >
-            <TrashIcon className='h-5 w-5 mr-2' />
-            Generate
-          </button>
-        </form>
+      <div className='max-w-6xl mx-auto w-full flex flex-col md:flex-row'>
+        <div className='flex-1 md:pr-8 mb-4 md:mb-0 relative'>
+          <Image
+            src={photo.file_url}
+            alt={photo.caption}
+            width={800}
+            height={800}
+            className='w-full h-auto max-h-screen object-contain rounded-lg'
+          />
+          {prevPhotoId && (
+            <Link
+              href={`/p/${prevPhotoId}`}
+              className='absolute left-4 top-1/2 transform -translate-y-1/2 md:fixed md:left-4'
+            >
+              <ChevronLeftIcon className='h-12 w-12 text-white hover:text-gray-300 transition-colors' />
+            </Link>
+          )}
+          {nextPhotoId && (
+            <Link
+              href={`/p/${nextPhotoId}`}
+              className='absolute right-4 top-1/2 transform -translate-y-1/2 md:fixed md:right-4'
+            >
+              <ChevronRightIcon className='h-12 w-12 text-white hover:text-gray-300 transition-colors' />
+            </Link>
+          )}
+        </div>
+        <div className='w-full md:w-1/3 flex flex-col justify-center'>
+          <p className='text-gray-200 text-lg mb-4'>{photo.caption}</p>
+          <form action={handleDelete} className='mb-4'>
+            <button
+              type='submit'
+              className='bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center w-full'
+            >
+              <TrashIcon className='h-5 w-5 mr-2' />
+              Delete Photo
+            </button>
+          </form>
+          <form action={handleImageGeneration}>
+            <button
+              type='submit'
+              className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center w-full'
+            >
+              <TrashIcon className='h-5 w-5 mr-2' />
+              Generate
+            </button>
+          </form>
+        </div>
       </div>
-      {prevPhotoId && (
-        <Link
-          href={`/p/${prevPhotoId}`}
-          className='fixed left-4 top-1/2 transform -translate-y-1/2'
-        >
-          <ChevronLeftIcon className='h-12 w-12 text-white hover:text-gray-300 transition-colors' />
-        </Link>
-      )}
-      {nextPhotoId && (
-        <Link
-          href={`/p/${nextPhotoId}`}
-          className='fixed right-4 top-1/2 transform -translate-y-1/2'
-        >
-          <ChevronRightIcon className='h-12 w-12 text-white hover:text-gray-300 transition-colors' />
-        </Link>
-      )}
     </div>
   );
 }
