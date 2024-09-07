@@ -2,10 +2,13 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   XMarkIcon,
+  TrashIcon,
 } from '@heroicons/react/24/solid';
 import { sql } from '@vercel/postgres';
+import { revalidatePath } from 'next/cache';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 type Props = {
   params: {
@@ -31,6 +34,13 @@ export default async function PhotoPage({ params }: Props) {
   const prevPhotoId = prevRows[0]?.id;
   const nextPhotoId = nextRows[0]?.id;
 
+  const handleDelete = async () => {
+    'use server';
+    await sql`DELETE FROM images WHERE id = ${params.photoId}`;
+    revalidatePath("/")
+    redirect("/");
+  };
+
   return (
     <div className='container mx-auto px-4 py-8 relative min-h-screen'>
       <Link href='/' className='absolute top-4 right-4 z-10'>
@@ -45,6 +55,15 @@ export default async function PhotoPage({ params }: Props) {
           className='w-full h-auto object-contain mb-4 rounded-lg'
         />
         <p className='text-gray-200 text-lg mb-4'>{photo.caption}</p>
+        <form action={handleDelete}>
+          <button
+            type='submit'
+            className='bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center'
+          >
+            <TrashIcon className='h-5 w-5 mr-2' />
+            Delete Photo
+          </button>
+        </form>
       </div>
       {prevPhotoId && (
         <Link
