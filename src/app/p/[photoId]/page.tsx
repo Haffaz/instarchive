@@ -30,9 +30,13 @@ export default async function PhotoPage({ params }: Props) {
 
   // Fetch previous and next photo IDs
   const { rows: prevRows } =
-    await sql`SELECT id FROM images WHERE id < ${params.photoId} ORDER BY id DESC LIMIT 1`;
+    (await sql`SELECT id FROM images WHERE created_at > ${photo.created_at} AND id !=${photo.id} ORDER BY created_at LIMIT 1`) as QueryResult<{
+      id: string;
+    }>;
   const { rows: nextRows } =
-    await sql`SELECT id FROM images WHERE id > ${params.photoId} ORDER BY id ASC LIMIT 1`;
+    (await sql`SELECT id FROM images WHERE created_at <= ${photo.created_at} ORDER BY created_at DESC LIMIT 1`) as QueryResult<{
+      id: string;
+    }>;
 
   const prevPhotoId = prevRows[0]?.id;
   const nextPhotoId = nextRows[0]?.id;

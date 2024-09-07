@@ -6,6 +6,7 @@ export type Photo = {
   id: string;
   file_url: string;
   caption: string;
+  created_at: string;
 };
 
 export default async function PhotoGrid() {
