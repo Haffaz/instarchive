@@ -1,11 +1,24 @@
 'use client';
-import { motion } from 'framer-motion';
+import { handleAddPhotoAction } from '@/app/actions';
+import { XMarkIcon } from '@heroicons/react/24/solid';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { useFormState } from 'react-dom';
 
-type Props = {
-  handleOnLinkSubmit: (formData: FormData) => void;
-};
+const initialState = { message: '' };
 
-const Header = ({ handleOnLinkSubmit }: Props) => {
+const Header = () => {
+  const [state, formAction] = useFormState(handleAddPhotoAction, initialState);
+  const [showAlert, setShowAlert] = useState(false);
+
+  useEffect(() => {
+    if (state?.message) {
+      setShowAlert(true);
+      const timer = setTimeout(() => setShowAlert(false), 5000); // Auto-hide after 5 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [state?.message]);
+
   return (
     <>
       <motion.nav
@@ -29,7 +42,7 @@ const Header = ({ handleOnLinkSubmit }: Props) => {
                 initial={{ opacity: 0, x: 50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
-                action={handleOnLinkSubmit}
+                action={formAction}
                 className='flex-grow max-w-sm ml-4'
               >
                 <div className='flex items-center w-full bg-zinc-800 bg-opacity-50 rounded-lg overflow-hidden shadow-inner'>
@@ -53,6 +66,25 @@ const Header = ({ handleOnLinkSubmit }: Props) => {
           </div>
         </div>
       </motion.nav>
+      <AnimatePresence>
+        {showAlert && state?.message && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, x: '100%' }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            exit={{ opacity: 0, y: 50, x: '100%' }}
+            transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+            className='fixed bottom-4 right-4 z-50 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg flex items-center'
+          >
+            <span>Oops! something went wrong... {state.message}</span>
+            <button
+              onClick={() => setShowAlert(false)}
+              className='ml-2 focus:outline-none'
+            >
+              <XMarkIcon className='h-5 w-5 text-white hover:text-gray-200 transition-colors' />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <div className='h-4'></div>
       {/* Increased spacer for the floating header */}
     </>

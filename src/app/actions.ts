@@ -1,8 +1,27 @@
+'use server';
+
 import { put } from '@vercel/blob';
+import { sql } from '@vercel/postgres';
 import axios from 'axios';
+import { revalidatePath } from 'next/cache';
 import { HTMLElement, parse } from 'node-html-parser';
 
-export async function uploadPhoto(photoUrl: string) {
+export async function handleAddPhotoAction(
+  _: { message: string } | undefined,
+  formData: FormData,
+) {
+  const postLink = formData.get('instagramLink');
+  if (!postLink) return;
+
+  const postData = await getPostData(postLink.toString());
+  if (!postData) return { message: 'Unable to get post data' };
+
+  const blobUrl = await uploadPhoto(postData.photoUrl);
+  await sql`INSERT INTO images (post_url, file_url, caption) VALUES (${postLink.toString()}, ${blobUrl}, ${postData.caption})`;
+  revalidatePath('/');
+}
+
+async function uploadPhoto(photoUrl: string) {
   const response = await fetch(photoUrl);
   const blob = await response.blob();
   const filename = `instagram_${Date.now()}.jpg`;
@@ -12,15 +31,19 @@ export async function uploadPhoto(photoUrl: string) {
   return url;
 }
 
-export async function getPostData(postUrl: string) {
-  const fullUrl = `${postUrl}embed/captioned`;
-  const { data } = await axios.get(fullUrl);
-  const root = parse(data);
+async function getPostData(postUrl: string) {
+  try {
+    const fullUrl = `${postUrl}embed/captioned`;
+    const { data } = await axios.get(fullUrl);
+    const root = parse(data);
 
-  const photoUrl = getPhotoUrl(root);
-  const caption = getPostCaption(root);
+    const photoUrl = getPhotoUrl(root);
+    const caption = getPostCaption(root);
 
-  return { photoUrl, caption };
+    return { photoUrl, caption };
+  } catch (e) {
+    console.error('Unable to get post data', e);
+  }
 }
 
 function getPhotoUrl(root: HTMLElement) {
