@@ -14,7 +14,7 @@ export default async function Home() {
 
     const { photoUrl, caption } = await getPostData(postLink.toString());
     const blobUrl = await uploadPhoto(photoUrl);
-    await sql`INSERT INTO images (file_url, caption) VALUES (${blobUrl}, ${caption})`;
+    await sql`INSERT INTO images (post_url, file_url, caption) VALUES (${postLink.toString()}, ${blobUrl}, ${caption})`;
     revalidatePath('/');
   };
 
