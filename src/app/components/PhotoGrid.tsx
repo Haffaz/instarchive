@@ -39,11 +39,9 @@ export default async function PhotoGrid({
       <div className='flex-grow'>
         <AnimatedPhotoGrid images={rows} />
       </div>
-      {totalPages > 1 && (
-        <div className='sticky bottom-0 w-full bg-zinc-950 py-4'>
-          <Pagination currentPage={page} totalPages={totalPages} />
-        </div>
-      )}
+      <div className='sticky bottom-0 w-full bg-zinc-950 py-4'>
+        <Pagination currentPage={page} totalPages={totalPages} />
+      </div>
     </div>
   );
 }
