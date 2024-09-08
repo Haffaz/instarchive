@@ -10,6 +10,7 @@ export type Photo = {
 };
 
 export default async function PhotoGrid() {
+  // TODO: add pagination
   const { rows } =
     (await sql`SELECT * FROM images ORDER BY created_at DESC`) as QueryResult<Photo>;
 
