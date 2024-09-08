@@ -2,7 +2,6 @@ import { Photo } from '@/app/components/PhotoGrid';
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
-  TrashIcon,
   XMarkIcon,
 } from '@heroicons/react/24/solid';
 import { del } from '@vercel/blob';
@@ -13,6 +12,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { QueryResult } from 'pg';
 import { generateImage } from './actions';
+import DeleteButton from './components/DeleteButton';
+import GenerateButton from './components/GenerateButton';
 
 type Props = {
   params: {
@@ -21,8 +22,9 @@ type Props = {
 };
 
 export default async function PhotoPage({ params }: Props) {
-  const { rows } =
-    (await sql`SELECT * FROM images WHERE id = ${params.photoId}`) as QueryResult<Photo>;
+  const { rows } = (await sql`
+    SELECT * FROM images WHERE id = ${params.photoId}
+  `) as QueryResult<Photo>;
 
   if (rows.length === 0) {
     return <div>Photo not found</div>;
@@ -31,28 +33,30 @@ export default async function PhotoPage({ params }: Props) {
   const photo = rows[0];
 
   // Fetch previous and next photo IDs
-  const { rows: prevRows } =
-    (await sql`SELECT id FROM images WHERE created_at > ${photo.created_at} AND id !=${photo.id} ORDER BY created_at LIMIT 1`) as QueryResult<{
-      id: string;
-    }>;
-  const { rows: nextRows } =
-    (await sql`SELECT id FROM images WHERE created_at <= ${photo.created_at} ORDER BY created_at DESC LIMIT 1`) as QueryResult<{
-      id: string;
-    }>;
+  const { rows: prevRows } = (await sql`
+    SELECT id FROM images 
+    WHERE created_at > ${photo.created_at} AND id != ${photo.id} 
+    ORDER BY created_at LIMIT 1
+  `) as QueryResult<{ id: string }>;
+
+  const { rows: nextRows } = (await sql`
+    SELECT id FROM images 
+    WHERE created_at <= ${photo.created_at} 
+    ORDER BY created_at DESC LIMIT 1
+  `) as QueryResult<{ id: string }>;
 
   const prevPhotoId = prevRows[0]?.id;
   const nextPhotoId = nextRows[0]?.id;
 
-  const handleDelete = async () => {
+  const deletePhotoAction = async () => {
     'use server';
     await sql`DELETE FROM images WHERE id = ${params.photoId}`;
     await del(photo.file_url);
-
     revalidatePath('/');
     redirect('/');
   };
 
-  const handleImageGeneration = async () => {
+  const generateImageAction = async () => {
     'use server';
     await generateImage(
       photo.file_url,
@@ -93,24 +97,14 @@ export default async function PhotoPage({ params }: Props) {
         </div>
         <div className='w-full md:w-1/3 flex flex-col justify-center'>
           <p className='text-gray-200 text-lg mb-4'>{photo.caption}</p>
-          <form action={handleDelete} className='mb-4'>
-            <button
-              type='submit'
-              className='bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center w-full'
-            >
-              <TrashIcon className='h-5 w-5 mr-2' />
-              Delete Photo
-            </button>
-          </form>
-          <form action={handleImageGeneration}>
-            <button
-              type='submit'
-              className='bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center w-full'
-            >
-              <TrashIcon className='h-5 w-5 mr-2' />
-              Generate
-            </button>
-          </form>
+          <div className='flex flex-1 justify-between space-x-4'>
+            <form action={generateImageAction} className='flex-1'>
+              <GenerateButton />
+            </form>
+            <form action={deletePhotoAction} className='flex-1'>
+              <DeleteButton />
+            </form>
+          </div>
         </div>
       </div>
     </div>
