@@ -13,6 +13,8 @@ This is a Next.js-based photo gallery application that allows users to view, add
 
 ## Getting Started
 
+The application is hosted at [instakive.vercel.app](https://instakive.vercel.app). You can visit the site to start using the photo gallery app immediately.
+
 First, run the development server:
 
 ```bash
@@ -31,5 +33,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
  * How I build my web app -> [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying)
  * How I deployed web app -> [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
  * How I made these cool animations -> [Framer motion](https://www.framer.com/motion/examples/)
- * How did I generate the image [Stability AI](https://platform.stability.ai/) -> 
-    
+ * How did I generate the image -> [Stability AI](https://platform.stability.ai/)
