@@ -33,7 +33,11 @@ async function uploadPhoto(photoUrl: string) {
 
 async function getPostData(postUrl: string) {
   try {
-    const fullUrl = `${postUrl}embed/captioned`;
+    const url = new URL(postUrl);
+    url.pathname = `${url.pathname.replace(/\/$/, '')}/${'embed/captioned'.replace(/^\//, '')}`;
+
+    const fullUrl = url.toString();
+
     const { data } = await axios.get(fullUrl);
     const root = parse(data);
 
