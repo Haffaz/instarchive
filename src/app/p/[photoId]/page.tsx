@@ -61,7 +61,7 @@ export default async function PhotoPage({ params }: Props) {
   };
 
   return (
-    <div className='container mx-auto px-4 py-8 relative max-h-screen flex flex-col items-center'>
+    <div className='container max-h-screen mx-auto px-4 py-4 relative flex flex-col items-center'>
       <Link href='/' className='absolute top-4 right-4 z-10'>
         <XMarkIcon className='h-8 w-8 text-white hover:text-gray-300 transition-colors' />
       </Link>
@@ -72,7 +72,7 @@ export default async function PhotoPage({ params }: Props) {
             alt={photo.caption}
             width={800}
             height={800}
-            className='w-full h-auto max-h-screen object-contain rounded-lg'
+            className='w-full h-auto max-h-[calc(100vh-32px)] object-contain rounded-lg'
           />
           {prevPhotoId && (
             <Link
