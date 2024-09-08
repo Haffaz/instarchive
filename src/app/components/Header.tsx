@@ -105,8 +105,8 @@ const Header = () => {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className='h-4'></div>
       {/* Increased spacer for the floating header */}
+      <div className='h-24'></div>
     </>
   );
 };

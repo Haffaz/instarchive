@@ -1,7 +1,7 @@
 import AnimatedPhotoGrid from '@/app/components/AnimatedPhotoGrid';
 import Pagination from '@/app/components/Pagination';
-import { sql } from '@vercel/postgres';
-import { QueryResult } from 'pg';
+import {sql} from '@vercel/postgres';
+import {QueryResult} from 'pg';
 
 export type Photo = {
   id: string;
@@ -10,7 +10,7 @@ export type Photo = {
   created_at: string;
 };
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 8;
 
 export default async function PhotoGrid({
   page = 1,
@@ -35,11 +35,15 @@ export default async function PhotoGrid({
   const totalPages = Math.ceil(Number(count) / ITEMS_PER_PAGE);
 
   return (
-    <>
-      <AnimatedPhotoGrid images={rows} />
+    <div className='flex flex-col min-h-screen'>
+      <div className='flex-grow'>
+        <AnimatedPhotoGrid images={rows} />
+      </div>
       {totalPages > 1 && (
-        <Pagination currentPage={page} totalPages={totalPages} />
+        <div className='sticky bottom-0 w-full bg-zinc-950 py-4'>
+          <Pagination currentPage={page} totalPages={totalPages} />
+        </div>
       )}
-    </>
+    </div>
   );
 }

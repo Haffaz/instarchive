@@ -22,7 +22,7 @@ export default function Pagination({
   };
 
   return (
-    <div className='flex items-center justify-center space-x-6 mt-8'>
+    <div className='flex items-center justify-center space-x-6'>
       <Link
         href={createPageURL(Math.max(1, currentPage - 1))}
         className={`flex items-center ${

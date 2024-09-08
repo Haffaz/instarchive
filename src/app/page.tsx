@@ -9,7 +9,7 @@ export default async function Home({
   const page = Number(searchParams.page) || 1;
 
   return (
-    <main className='min-h-screen bg-zinc-950 pt-20'>
+    <main className='min-h-screen bg-zinc-950'>
       <Header />
       <div className='container mx-auto px-4 py-4'>
         <PhotoGrid page={page} />
