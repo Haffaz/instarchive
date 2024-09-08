@@ -10,7 +10,6 @@ import { revalidatePath } from 'next/cache';
 import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { NextResponse } from 'next/server';
 import { QueryResult } from 'pg';
 import { generateImage } from './actions';
 import DeleteButton from './components/DeleteButton';
@@ -59,17 +58,12 @@ export default async function PhotoPage({ params }: Props) {
 
   const generateImageAction = async () => {
     'use server';
-    const { imageBuffer } = await generateImage(
+    const { url } = await generateImage(
       photo.file_url,
       'Transform the original image into a 3D cartoon style while preserving all essential physical features and the composition. Maintain the original shapes, proportions, and spatial relationships between objects. Convert the texture to a cartoon style with bold, clean lines, simplified details, and vibrant colors. The result should resemble a 3D animated scene with exaggerated but smooth features, soft lighting, and expressive elements. Ensure that no physical aspects (such as size, layout, or structure) are changed, only the texture and overall style are modified to a cartoon aesthetic.',
     );
 
-    return new NextResponse(Buffer.from(imageBuffer), {
-      headers: {
-        'Content-Type': 'image/jpeg',
-        'Content-Length': imageBuffer.byteLength.toString(),
-      },
-    });
+    redirect(url);
   };
 
   return (

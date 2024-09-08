@@ -28,7 +28,7 @@ export async function generateImage(image: string, prompt: string) {
 
     const { url } = await put(filename, generatedBlob, { access: 'public' });
 
-    return { url, imageBuffer };
+    return { url };
   } else {
     throw new Error(`${response.status}: ${await response.text()}`);
   }
