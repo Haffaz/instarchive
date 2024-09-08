@@ -22,13 +22,13 @@ export async function generateImage(image: string, prompt: string) {
   );
 
   if (response.ok) {
-    const arrayBuffer = await response.arrayBuffer();
-    const generatedBlob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+    const imageBuffer = await response.arrayBuffer();
+    const generatedBlob = new Blob([imageBuffer], { type: 'image/jpeg' });
     const filename = `generated_${Date.now()}.jpeg`;
 
     const { url } = await put(filename, generatedBlob, { access: 'public' });
 
-    return url;
+    return { url, imageBuffer };
   } else {
     throw new Error(`${response.status}: ${await response.text()}`);
   }
