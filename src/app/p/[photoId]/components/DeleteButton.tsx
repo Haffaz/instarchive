@@ -17,15 +17,14 @@ export default function DeleteButton() {
     >
       {pending ? (
         <motion.div
-          className='inline-block h-5 w-5 mr-2 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]'
+          className='inline-block h-5 w-5 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]'
           initial={{ rotate: 0 }}
           animate={{ rotate: 360 }}
           transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
         />
       ) : (
-        <TrashIcon className='h-5 w-5 mr-2 group-hover:text-rose-400 transition-colors' />
+        <TrashIcon className='h-5 w-5 group-hover:text-rose-400 transition-colors' />
       )}
-      <span>{pending ? 'Deleting...' : 'Delete'}</span>
     </motion.button>
   );
 }

@@ -65,7 +65,7 @@ export default async function PhotoPage({ params }: Props) {
   };
 
   return (
-    <div className='container max-h-screen mx-auto px-4 py-4 relative flex flex-col items-center'>
+    <div className='container max-h-screen mx-auto px-4 py-6 relative flex flex-col items-center'>
       <Link href='/' className='absolute top-4 right-4 z-10'>
         <XMarkIcon className='h-8 w-8 text-white hover:text-gray-300 transition-colors' />
       </Link>
@@ -76,7 +76,7 @@ export default async function PhotoPage({ params }: Props) {
             alt={photo.caption}
             width={800}
             height={800}
-            className='w-full h-auto max-h-[calc(100vh-32px)] object-contain rounded-lg'
+            className='w-full h-auto max-h-[calc(100vh-48px)] object-contain rounded-lg'
           />
           {prevPhotoId && (
             <Link
@@ -95,13 +95,13 @@ export default async function PhotoPage({ params }: Props) {
             </Link>
           )}
         </div>
-        <div className='w-full md:w-1/3 flex flex-col justify-center'>
+        <div className='w-full md:w-1/3 flex flex-col justify-center md:mt-8'>
           <p className='text-gray-200 text-lg mb-4'>{photo.caption}</p>
-          <div className='flex flex-1 justify-between space-x-4'>
+          <div className='flex flex-1 justify-between space-x-4 mb-4'>
             <form action={generateImageAction} className='flex-1'>
               <GenerateButton />
             </form>
-            <form action={deletePhotoAction} className='flex-1'>
+            <form action={deletePhotoAction}>
               <DeleteButton />
             </form>
           </div>
