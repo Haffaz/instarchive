@@ -1,7 +1,7 @@
 import AnimatedPhotoGrid from '@/app/components/AnimatedPhotoGrid';
 import Pagination from '@/app/components/Pagination';
-import {sql} from '@vercel/postgres';
-import {QueryResult} from 'pg';
+import { sql } from '@vercel/postgres';
+import { QueryResult } from 'pg';
 
 export type Photo = {
   id: string;
