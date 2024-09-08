@@ -32,3 +32,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
  * How I deployed web app -> [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
  * How I made these cool animations -> [Framer motion](https://www.framer.com/motion/examples/)
  * How did I generate the image [Stability AI](https://platform.stability.ai/) -> 
+    
