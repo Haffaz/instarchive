@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { put } from '@vercel/blob';
 
 export async function generateImage(image: string, prompt: string) {
   const formData = new FormData();
@@ -7,10 +7,10 @@ export async function generateImage(image: string, prompt: string) {
 
   formData.append('image', blob);
   formData.append('prompt', prompt);
-  formData.append('output_format', 'webp');
+  formData.append('output_format', 'jpeg');
 
   const response = await fetch(
-    'https://api.stability.ai/v2beta/stable-image/control/style',
+    'https://api.stability.ai/v2beta/stable-image/control/structure',
     {
       method: 'POST',
       body: formData,
@@ -23,7 +23,12 @@ export async function generateImage(image: string, prompt: string) {
 
   if (response.ok) {
     const arrayBuffer = await response.arrayBuffer();
-    fs.writeFileSync('./chicken-portrait.webp', Buffer.from(arrayBuffer));
+    const generatedBlob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+    const filename = `generated_${Date.now()}.jpeg`;
+
+    const { url } = await put(filename, generatedBlob, { access: 'public' });
+
+    return url;
   } else {
     throw new Error(`${response.status}: ${await response.text()}`);
   }
