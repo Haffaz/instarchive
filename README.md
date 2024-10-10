@@ -1,4 +1,4 @@
-# Instakive (Photo Gallery App)
+# Instarchive (Photo Gallery App)
 
 This is a Next.js-based photo gallery application that allows users to view, add, and manage photos. The app features a responsive grid layout, individual photo pages, and AI-powered image generation capabilities.
 
