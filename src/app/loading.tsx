@@ -10,7 +10,7 @@ export default function Loading() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, repeat: Infinity, repeatType: 'reverse' }}
       >
-        Loading Instakive...
+        Loading...
       </motion.div>
       <motion.div
         className='absolute bottom-10 left-1/2 transform -translate-x-1/2'

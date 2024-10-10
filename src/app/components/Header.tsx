@@ -63,7 +63,7 @@ const Header = () => {
                 transition={{ delay: 0.3 }}
                 className='text-xl font-bold text-zinc-100'
               >
-                Instakive
+                Instarchive
               </motion.h1>
               <motion.form
                 initial={{ opacity: 0, x: 50 }}

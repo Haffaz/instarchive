@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Instakive',
-  description: 'Kive Challenge -  Engineer 2024',
+  title: 'instarchive',
+  description: 'Photo gallery application',
 };
 
 export default function RootLayout({
